@@ -3,7 +3,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
 import MicIcon from '@mui/icons-material/Mic';
 import { Avatar, IconButton } from '@mui/material'
-import { addDoc, collection, doc, orderBy, serverTimestamp, setDoc, where } from 'firebase/firestore';
+import { addDoc, collection, doc, orderBy, query, serverTimestamp, setDoc, where } from 'firebase/firestore';
 import { useRouter } from 'next/router'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore';
@@ -22,15 +22,15 @@ function ChatScreen({ chat, messages }) {
   const endOfMessageRef = useRef(null)
   
   const [messagesSnapshot] = useCollection(
-    collection(
+    query(collection(
       doc(db, 'chats', router.query.id,), "messages"), 
       orderBy("timestamp", "asc")
-      )
+      ))
 
   const [recipientSnapshot] = useCollection(
-    collection(db, 'users') , 
+    query(collection(db, 'users') , 
     where('email' , '==' , getRecipientEmail(chat.users, user))
-  )
+  ))
 
   const showMessages = () => {
     if (messagesSnapshot) {
@@ -83,7 +83,7 @@ function ChatScreen({ chat, messages }) {
   const recipientEmail = getRecipientEmail(chat.users, user)
 
   // console.log(recipient)
-  console.log(recipientSnapshot?.docs?.[0].data());
+  // console.log(recipientSnapshot?.docs?.[0].data());
 
   return (
     <Container>

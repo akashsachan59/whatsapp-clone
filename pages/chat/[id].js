@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, orderBy } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore'
 import Head from 'next/head'
 import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -11,7 +11,7 @@ import getRecipientEmail from '../../utils/getRecipientEmail'
 function Chat({ chat, messages }) {
     const [user] = useAuthState(auth) 
     // console.log(getRecipientEmail(chat.users, user))
-    // console.log(chat, messages);
+    
 
     return (
         <Container>
@@ -33,7 +33,7 @@ export async function getServerSideProps(context){
     const ref = doc(db, 'chats', context.query.id,)
 
     // Prep messages on server
-    const messagesRef = await getDocs(collection(ref, "messages"), orderBy("timestamp", "asc"))
+    const messagesRef = await getDocs(query(collection(ref, "messages"), orderBy("timestamp")))
 
     const messages = messagesRef.docs.map(doc => ({
         id: doc.id,

@@ -1,5 +1,5 @@
 import { Avatar } from '@mui/material'
-import { collection, where } from 'firebase/firestore'
+import { collection, query, where } from 'firebase/firestore'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
@@ -12,9 +12,9 @@ function Chat({ id, users }) {
     const router = useRouter()
     const [user] = useAuthState(auth)
     const [recipientSnapshot] = useCollection(
-        collection(db, 'users'),
+        query(collection(db, 'users'),
         where('email', '==', getRecipientEmail(users, user))
-    )
+    ))
 
     const recipient = recipientSnapshot?.docs?.[0]?.data()
     const recipientEmail = getRecipientEmail(users, user)
